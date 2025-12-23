@@ -34,19 +34,21 @@ class GameApp:
         pygame.display.set_caption(WINDOW_CAPTION)
 
         self._clock: pygame.time.Clock = pygame.time.Clock()
-
         self._app_state_manager = AppStateManager()
-        self._theme = create_default_theme()
+
+        # Важно: создаём окно до загрузки спрайтов, чтобы можно было
+        # безопасно делать convert_alpha().
+        self._window: pygame.Surface = pygame.display.set_mode(
+            (START_WINDOW_MIN_WIDTH, START_WINDOW_MIN_HEIGHT),
+            pygame.RESIZABLE,
+        )
+
+        self._theme = create_default_theme(display_surface=self._window)
         self._renderer = BoardRenderer(theme=self._theme)
 
         self._main_menu_view = MainMenuView(theme=self._theme)
         self._pause_menu_view = PauseMenuView(theme=self._theme)
         self._game_over_menu_view = GameOverMenuView(theme=self._theme)
-
-        self._window: pygame.Surface = pygame.display.set_mode(
-            (START_WINDOW_MIN_WIDTH, START_WINDOW_MIN_HEIGHT),
-            pygame.RESIZABLE,
-        )
 
         self._running: bool = True
 
@@ -115,6 +117,12 @@ class GameApp:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 self._handle_mouse_button_down(event)
 
+            elif event.type == pygame.MOUSEMOTION:
+                self._handle_mouse_motion(event)
+
+            elif event.type == pygame.MOUSEBUTTONUP:
+                self._handle_mouse_button_up(event)
+
     def _handle_keydown(self, event: pygame.event.Event) -> None:
         """Обработать нажатие клавиши."""
         state = self._app_state_manager.state
@@ -166,10 +174,45 @@ class GameApp:
         self._window = pygame.display.set_mode(new_size, pygame.RESIZABLE)
 
     def _handle_mouse_button_down(self, event: pygame.event.Event) -> None:
-        """Обработать клик мышью по полю."""
-        state = self._app_state_manager.state
-        session = state.session
+        """Обработать клик мышью.
 
+        Правило:
+            * если активен экран меню — клик обрабатывает меню;
+            * иначе (GAME) — клик обрабатывает поле.
+        """
+        state = self._app_state_manager.state
+
+        if state.current_screen is AppScreen.MAIN_MENU:
+            action_id = self._main_menu_view.handle_mouse_button_down(
+                surface=self._window,
+                mouse_pos=event.pos,
+                button=event.button,
+            )
+            if action_id is not None:
+                self._handle_menu_action(action_id)
+            return
+
+        if state.current_screen is AppScreen.PAUSE_MENU:
+            action_id = self._pause_menu_view.handle_mouse_button_down(
+                surface=self._window,
+                mouse_pos=event.pos,
+                button=event.button,
+            )
+            if action_id is not None:
+                self._handle_menu_action(action_id)
+            return
+
+        if state.current_screen is AppScreen.GAME_OVER:
+            action_id = self._game_over_menu_view.handle_mouse_button_down(
+                surface=self._window,
+                mouse_pos=event.pos,
+                button=event.button,
+            )
+            if action_id is not None:
+                self._handle_menu_action(action_id)
+            return
+
+        session = state.session
         if session is None:
             return
 
@@ -183,14 +226,7 @@ class GameApp:
         )
 
     def _handle_escape(self) -> None:
-        """Обработка клавиши ESC.
-
-        Поведение:
-            * во время игры — открыть меню паузы поверх поля;
-            * из меню паузы — вернуться в игру;
-            * из экрана результата — выйти в главное меню;
-            * из главного меню — выйти из приложения.
-        """
+        """Обработка клавиши ESC."""
         state = self._app_state_manager.state
 
         if state.current_screen is AppScreen.GAME:
@@ -201,6 +237,29 @@ class GameApp:
             self._app_state_manager.abort_to_main_menu()
         elif state.current_screen is AppScreen.MAIN_MENU:
             self._running = False
+
+    def _handle_mouse_motion(self, event: pygame.event.Event) -> None:
+        """Обработать движение мыши (hover по меню)."""
+        state = self._app_state_manager.state
+        mouse_pos = event.pos
+
+        if state.current_screen is AppScreen.MAIN_MENU:
+            self._main_menu_view.handle_mouse_motion(self._window, mouse_pos)
+        elif state.current_screen is AppScreen.PAUSE_MENU:
+            self._pause_menu_view.handle_mouse_motion(self._window, mouse_pos)
+        elif state.current_screen is AppScreen.GAME_OVER:
+            self._game_over_menu_view.handle_mouse_motion(self._window, mouse_pos)
+
+    def _handle_mouse_button_up(self, _event: pygame.event.Event) -> None:
+        """Обработать отпускание кнопки мыши (завершение drag меню)."""
+        state = self._app_state_manager.state
+
+        if state.current_screen is AppScreen.MAIN_MENU:
+            self._main_menu_view.handle_mouse_button_up()
+        elif state.current_screen is AppScreen.PAUSE_MENU:
+            self._pause_menu_view.handle_mouse_button_up()
+        elif state.current_screen is AppScreen.GAME_OVER:
+            self._game_over_menu_view.handle_mouse_button_up()
 
     def _toggle_fullscreen(self) -> None:
         """Переключить полноэкранный режим."""
@@ -226,13 +285,10 @@ class GameApp:
         if session is None:
             return
 
-        # Переход в экран результата только один раз:
         if (
             session.status in (GameStatus.WON, GameStatus.LOST)
             and state.current_screen is AppScreen.GAME
         ):
-            # --- готовим текст результата для меню ---
-
             if session.status is GameStatus.WON:
                 title = "Победа!"
             elif session.status is GameStatus.LOST:
@@ -255,8 +311,6 @@ class GameApp:
             ]
 
             self._game_over_menu_view.set_subtitle_lines(subtitle_lines)
-
-            # Переключаемся на экран результата
             self._app_state_manager.show_game_over()
 
     def _draw(self) -> None:
@@ -290,7 +344,13 @@ class GameApp:
 
     def _draw_main_menu(self, surface: pygame.Surface) -> None:
         """Отрисовать главное меню."""
-        surface.fill(self._theme.background_color)
+        bg = self._theme.sprites.get("menu_bg")
+        if bg is None:
+            surface.fill(self._theme.background_color)
+        else:
+            bg_scaled = pygame.transform.smoothscale(bg, surface.get_size())
+            surface.blit(bg_scaled, (0, 0))
+
         self._main_menu_view.draw(surface)
 
     def _draw_pause_menu(self, surface: pygame.Surface) -> None:
@@ -323,8 +383,6 @@ class GameApp:
             self._app_state_manager.show_campaign_menu()
         elif action_id in ("exit", "quit"):
             self._running = False
-
-    # === Вспомогательные методы ===
 
     def _get_current_layout(self, session: GameSession) -> LayoutInfo:
         """Получить LayoutInfo для текущего размера окна."""

@@ -4,24 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1e8d78d9-e218-49a1-b96d-93251488a45b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/fonts/Inter-VariableFont_opsz,wght.ttf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/MinesweeperGame.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/MinesweeperGame.iml" afterDir="false" />
+    <list default="true" id="1e8d78d9-e218-49a1-b96d-93251488a45b" name="Changes" comment="Base game MVP">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/board.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/board.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/enums.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/enums.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/results.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/results.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/core/timer.py" beforeDir="false" afterPath="$PROJECT_DIR$/core/timer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/app_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/game/app_state.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/rules.py" beforeDir="false" afterPath="$PROJECT_DIR$/game/rules.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/game/session.py" beforeDir="false" afterPath="$PROJECT_DIR$/game/session.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/project_file_list.txt" beforeDir="false" afterPath="$PROJECT_DIR$/project_file_list.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/events.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/events.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ui/main_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/main_window.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ui/menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ui/renderer.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/renderer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ui/themes.py" beforeDir="false" afterPath="$PROJECT_DIR$/ui/themes.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -39,36 +26,36 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "Samuelishe"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Samuelishe&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Samuelishe/MinesweeperGame.git",
-    "accountId": "34b4b62b-2c5a-4186-a64e-e8ee639c4ae0"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Samuelishe/MinesweeperGame.git&quot;,
+    &quot;accountId&quot;: &quot;34b4b62b-2c5a-4186-a64e-e8ee639c4ae0&quot;
   }
-}]]></component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 5
-}]]></component>
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
   <component name="ProjectId" id="366H9JTf3GQUBeohxb07zonI9Ct" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame" />
@@ -88,6 +75,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
@@ -106,7 +94,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-f69e5c277ee4-cbfc7b97e6b2-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-252.27397.106" />
+        <option value="bundled-python-sdk-0978a7220b69-9867c7d4c0a4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.28294.336" />
       </set>
     </attachedChunks>
   </component>
@@ -118,6 +106,19 @@
       <option name="presentableId" value="Default" />
       <updated>1764319947354</updated>
     </task>
+    <task id="LOCAL-00001" summary="Base game MVP">
+      <option name="closed" value="true" />
+      <created>1764338025664</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1764338025664</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Base game MVP" />
+    <option name="LAST_COMMIT_MESSAGE" value="Base game MVP" />
   </component>
 </project>

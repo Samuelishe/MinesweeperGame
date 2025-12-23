@@ -1,16 +1,10 @@
-"""Темы оформления игры Сапёр.
-
-Модуль описывает структуру темы (Theme), которая используется рендерером
-для отрисовки поля, чисел, мин, флагов, HUD и меню. Тема может быть как
-чисто программной (цвета, линии, шрифты), так и спрайтовой (PNG).
-"""
+"""Темы оформления (палитры и пути к ассетам)."""
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from typing import Dict, Tuple
-
-import pygame
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Optional, Tuple
 
 
 Color = Tuple[int, int, int]
@@ -18,155 +12,91 @@ Color = Tuple[int, int, int]
 
 @dataclass(slots=True)
 class Theme:
-    """Тема оформления игры.
+    """Тема интерфейса.
 
-    Attributes:
-        name:
-            Имя темы (для настроек и логирования).
-
-        background_color:
-            Цвет фона окна.
-        board_background_color:
-            Цвет фона области с полем.
-
-        tile_hidden_color:
-            Цвет закрытых клеток.
-        tile_revealed_color:
-            Цвет открытых клеток.
-        tile_border_color:
-            Цвет рамок клеток.
-
-        mine_color:
-            Цвет мины, если используется программная отрисовка.
-        flag_color:
-            Цвет флага, если используется программная отрисовка.
-
-        hud_background_color:
-            Цвет фона HUD (панель сверху).
-        hud_text_color:
-            Цвет текста HUD (цифры, статус).
-
-        menu_shadow_color:
-            Цвет тени под прямоугольником меню.
-        menu_background_color:
-            Цвет фона прямоугольника меню.
-        menu_border_color:
-            Цвет рамки меню.
-        menu_text_color:
-            Цвет текста в меню.
-        menu_highlight_color:
-            Цвет подсветки выбранного пункта меню.
-
-        number_colors:
-            Цвета чисел 1–8. Остальные значения по умолчанию рисуются
-            цветом hud_text_color.
-
-        use_sprites_for_tiles:
-            Использовать ли спрайты для тайлов вместо программной отрисовки.
-        use_sprites_for_icons:
-            Использовать ли спрайты для иконок (мины, флаги, смайлик).
-
-        sprites:
-            Словарь с заранее загруженными Surface для различных сущностей.
+    Важно: тут только данные. pygame-объекты (Surface/Font) не храним.
     """
 
-    name: str
-
+    # --- базовые цвета UI ---
     background_color: Color
-    board_background_color: Color
-
-    tile_hidden_color: Color
-    tile_revealed_color: Color
-    tile_border_color: Color
-
-    mine_color: Color
-    flag_color: Color
-
-    hud_background_color: Color
-    hud_text_color: Color
-
-    menu_shadow_color: Color
-    menu_background_color: Color
-    menu_border_color: Color
     menu_text_color: Color
-    menu_highlight_color: Color
+    menu_muted_text_color: Color
+    menu_highlight_text_color: Color
 
-    number_colors: Dict[int, Color] = field(default_factory=dict)
+    menu_overlay_color: Tuple[int, int, int, int]
+    menu_highlight_color: Tuple[int, int, int, int]
+    menu_border_color: Tuple[int, int, int, int]
 
-    use_sprites_for_tiles: bool = False
-    use_sprites_for_icons: bool = False
+    # --- пути к ассетам (опционально) ---
+    ui_font_path: Optional[str] = None
+    emoji_font_path: Optional[str] = None
 
-    sprites: Dict[str, pygame.Surface] = field(default_factory=dict)
+    menu_background_image_path: Optional[str] = None
+    menu_frame_image_path: Optional[str] = None
+    menu_noise_image_path: Optional[str] = None
+    menu_selector_icon_path: Optional[str] = None
 
-    def get_number_color(self, value: int) -> Color:
-        """Получить цвет числа на клетке.
+    # --- параметры меню ---
+    menu_screen_margin_px: int = 56
+    menu_max_width_ratio: float = 0.86
+    menu_max_height_ratio: float = 0.82
 
-        Args:
-            value:
-                Число соседних мин (1–8).
+    # внутренние отступы контента (внутри художественной рамки)
+    menu_content_padding_px: int = 56
+    menu_item_height_px: int = 64
+    menu_item_gap_px: int = 18
 
-        Returns:
-            Цвет, соответствующий этому числу, либо цвет текста HUD
-            по умолчанию.
-        """
-        return self.number_colors.get(value, self.hud_text_color)
+    menu_title_gap_px: int = 18
+    menu_subtitle_gap_px: int = 12
+
+    # резерв под стрелку/иконку слева, чтобы текст не "ездил"
+    menu_selector_reserved_px: int = 44
+
+
+def _asset_path(*parts: str) -> str:
+    """Построить путь к ассету относительно корня проекта.
+
+    Предположение: themes.py лежит в ui/, рядом с main_window.py и т.д.
+    Тогда корень проекта = родитель папки ui.
+    """
+    ui_dir = Path(__file__).resolve().parent
+    project_root = ui_dir.parent
+    return str(project_root.joinpath(*parts))
+
+
+def _existing_or_none(path: str) -> Optional[str]:
+    """Вернуть путь, если файл существует, иначе None."""
+    if Path(path).is_file():
+        return path
+    return None
 
 
 def create_default_theme() -> Theme:
-    """Создать классическую тему по умолчанию.
+    """Тема по умолчанию (безопасна даже если ассеты не на месте)."""
+    ui_font = _existing_or_none(
+        _asset_path("assets", "fonts", "Inter-VariableFont_opsz,wght.ttf")
+    )
+    emoji_font = _existing_or_none(
+        _asset_path("assets", "fonts", "NotoColorEmoji.ttf")
+    )
 
-    Возвращает строго программную тему без спрайтов, в стиле
-    «серые клетки + цветные цифры».
-    """
-    background_color: Color = (192, 192, 192)
-    board_background_color: Color = (192, 192, 192)
-
-    tile_hidden_color: Color = (160, 160, 160)
-    tile_revealed_color: Color = (224, 224, 224)
-    tile_border_color: Color = (128, 128, 128)
-
-    mine_color: Color = (0, 0, 0)
-    flag_color: Color = (220, 0, 0)
-
-    hud_background_color: Color = (160, 160, 160)
-    hud_text_color: Color = (0, 0, 0)
-
-    # Меню делаем чуть более контрастным, но в той же палитре.
-    menu_shadow_color: Color = (96, 96, 96)
-    menu_background_color: Color = (208, 208, 208)
-    menu_border_color: Color = (64, 64, 64)
-    menu_text_color: Color = (0, 0, 0)
-    menu_highlight_color: Color = (176, 196, 222)  # light steel blue vibe
-
-    number_colors: Dict[int, Color] = {
-        1: (0, 0, 255),
-        2: (0, 128, 0),
-        3: (255, 0, 0),
-        4: (0, 0, 128),
-        5: (128, 0, 0),
-        6: (0, 128, 128),
-        7: (0, 0, 0),
-        8: (128, 128, 128),
-    }
+    bg = _existing_or_none(_asset_path("assets", "images", "bg_main.png"))
+    frame = _existing_or_none(_asset_path("assets", "images", "panel_frame.png"))
+    noise = _existing_or_none(_asset_path("assets", "images", "noise.png"))
+    selector = _existing_or_none(_asset_path("assets", "images", "selector_arrow.png"))
 
     return Theme(
-        name="Classic",
-        background_color=background_color,
-        board_background_color=board_background_color,
-        tile_hidden_color=tile_hidden_color,
-        tile_revealed_color=tile_revealed_color,
-        tile_border_color=tile_border_color,
-        mine_color=mine_color,
-        flag_color=flag_color,
-        hud_background_color=hud_background_color,
-        hud_text_color=hud_text_color,
-        menu_shadow_color=menu_shadow_color,
-        menu_background_color=menu_background_color,
-        menu_border_color=menu_border_color,
-        menu_text_color=menu_text_color,
-        menu_highlight_color=menu_highlight_color,
-        number_colors=number_colors,
-        use_sprites_for_tiles=False,
-        use_sprites_for_icons=False,
-        sprites={},
+        background_color=(24, 24, 24),
+        menu_text_color=(235, 235, 235),
+        menu_muted_text_color=(200, 200, 200),
+        menu_highlight_text_color=(255, 255, 255),
+        menu_overlay_color=(0, 0, 0, 140),
+        menu_highlight_color=(95, 120, 170, 120),
+        menu_border_color=(255, 255, 255, 40),
+        ui_font_path=ui_font,
+        emoji_font_path=emoji_font,
+        menu_background_image_path=bg,
+        menu_frame_image_path=frame,
+        menu_noise_image_path=noise,
+        menu_selector_icon_path=selector,
     )

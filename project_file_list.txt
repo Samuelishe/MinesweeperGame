@@ -1595,7 +1595,10 @@ C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame\.venv\Scripts\vcruntime140.d
 C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame\.venv\Scripts\winsound.pyd
 C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame\.venv\Scripts\zlib1.dll
 C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame\assets\fonts\Inter-VariableFont_opsz,wght.ttf
-C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame\assets\fonts\NotoColorEmoji.ttf
+C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame\assets\images\ui\menu\bg_main.png
+C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame\assets\images\ui\menu\noise.png
+C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame\assets\images\ui\menu\panel_frame.png
+C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame\assets\images\ui\menu\selector_arrow.png
 C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame\core\__init__.py
 C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame\core\board.py
 C:\Users\Oleg Zudin\PycharmProjects\MinesweeperGame\core\enums.py
